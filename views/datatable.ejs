@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <%- include('partials/header') %>    
+</head>
+
+<body>
+<!--sidebar_minimize-->
+  <div class="wrapper  ">
+    <%- include('partials/sidebar', { collections: collections }) %>
+      <div class="main-panel">
+        <div class="main-header">
+          <div class="main-header-logo">
+            <!-- Logo Header -->
+            <div class="logo-header" data-background-color="dark">
+              <a href="../index.html" class="logo">
+                <img src="/assets/img/kaiadmin/logo_light.svg" alt="navbar brand" class="navbar-brand" height="20" />
+              </a>
+              <div class="nav-toggle">
+                <button class="btn btn-toggle toggle-sidebar">
+                  <i class="gg-menu-right"></i>
+                </button>
+                <button class="btn btn-toggle sidenav-toggler">
+                  <i class="gg-menu-left"></i>
+                </button>
+              </div>
+              <button class="topbar-toggler more">
+                <i class="gg-more-vertical-alt"></i>
+              </button>
+            </div>
+            <!-- End Logo Header -->
+          </div>
+          <%- include('partials/navbar') %>
+        </div>
+        <div class="container">
+          <div class="page-inner">
+            <div class="row">
+              <div class="col-md-12">
+                <button type="button" class="btn btn-primary mb-4" data-bs-toggle="modal"
+                  data-bs-target="#exampleModal">
+                  Agregar Necropsia
+                </button>
+                <div class="card">
+                  <div class="card-header">
+
+                    <div class="mb-4 margen-btn-tabla">
+
+                    </div>
+                    <h4 class="card-title">
+                      <%= collectionName %>
+                    </h4>
+                  </div>
+
+                  <div class="card-body">
+
+                    <div class="table-responsive">
+                      <table id="basic-datatables" style="text-align: center; width:100%"
+                        class="display responsive nowrap table table-striped table-hover"> 
+                        <thead>
+                          <tr>
+                            <th>Legajo</th>
+                            <th>Of. Fiscal</th>
+                            <th>Expte</th>
+                            <th>Nombre y Apellido</th>
+                            <th>edad</th>
+                            <th>Perito</th>
+                            <th>Codigo</th>
+                            <th>Ingreso</th>
+                            <th>visado</th>
+                            <th>Observ.</th>
+                            <th>Acciones</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <% data.forEach(function(necropsia) { %>
+                            <tr>
+                              <td>
+                                <%= necropsia.legajo %>
+                              </td>
+
+                              <td>
+                                <%= necropsia.oficina_fiscal %>
+                              </td>
+
+                              <td>
+                                <%= necropsia.expediente %>
+                              </td>
+
+                              <td>
+                                <%= `${necropsia.nombre} ${necropsia.apellido}` %>
+                              </td>
+
+                              <td>
+                                <%= necropsia.edad %>
+                              </td>
+
+                              <td>
+                                <%= necropsia.perito %>
+                              </td>
+
+                              <td>
+                                <%= necropsia.codigo %>
+                              </td>
+
+                              <td>
+                                <%= necropsia.fecha %>
+                              </td>
+
+                              <td>
+                                <% if (necropsia.visado) { %>
+                                  <span class="badge badge-success">VISADO</span>
+                                  <% } else { %>
+                                    <span class="badge badge-warning">NO </span>
+                                    <% } %>
+                              </td>
+
+                              <td>
+                                <%= necropsia.visado %>
+                              </td>
+
+                              <td>
+                                <button class=" btn" title="Ver">
+                                  <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="btn" title="Editar">
+                                  <i class="fas fa-pencil-alt"></i>
+                                </button>
+                              </td>
+
+                            </tr>
+                            <% }); %>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+  </div>
+  <!-- MODAL INGRESO CADAVER -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">
+            Agregar Necropsia
+          </h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="cadaver-form" method="POST" action="/collection/save-necropsia">
+            <input type="hidden" name="collectionName" value="<%= collectionName %>">
+
+            <!-- AÑO, LEGAJO, EXPEDIENTE, OF -->
+            <div class="row">
+              <div class="col col-md-3">
+                <label for="anio">Año</label>
+                <select name="anio_necropsia" id="anio_necropsia" class="form-control">
+                  <option value="<%= year %>">
+                    <%= year %>
+                  </option>
+                </select>
+              </div>
+              <div class="col col-md-3">
+                <label for="legajo">Legajo</label>
+                <input type="text" id="legajo" name="legajo" class="form-control" placeholder="Ej 247/24" />
+              </div>
+
+              <div class="col col-md-4">
+                <label for="expediente">Expediente</label>
+                <input type="text" id="expediente" name="expediente" class="form-control" placeholder="P-124.487/23" />
+              </div>
+              <div class="col col-md-2">
+                <label for="oficina fiscal">Of.Fiscal</label>
+                <input type="text" id="oficina_fiscal" name="oficina_fiscal" class="form-control" placeholder="10" />
+              </div>
+            </div>
+            <br />
+
+            <!-- APELLIDO, NOMBRE, EDAD -->
+            <div class="row">
+              <div class="col col-md-5">
+                <label for="apellido">Apellido</label>
+                <input type="text" name="apellido" id="apellido" class="form-control" />
+              </div>
+              <div class="col col-md-5">
+                <label for="nombre">Nombre</label>
+                <input type="text" name="nombre" id="nombre" class="form-control" />
+              </div>
+              <div class="col col-md-2">
+                <label for="edad">Edad</label>
+                <input type="text" name="edad" id="edad" class="form-control" />
+              </div>
+            </div>
+            <br />
+
+            <!-- DNI, SEXO -->
+            <div class="row">
+
+              <div class="col-md-7 d-flex align-items-center">
+                <label class="margenSexo">Sexo: </label>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="sexo" id="masculino" value="M" required />
+                  <label class="form-check-label" for="masculino">Masc</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="sexo" id="femenino" value="F" required />
+                  <label class="form-check-label" for="femenino">Fem</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="sexo" id="otro" value="O" required />
+                  <label class="form-check-label" for="otro">Otro</label>
+                </div>
+              </div>
+            </div>
+            <br />
+
+            <!-- FECHA Y HORA DE INGRESO -->
+            <div class="row">
+              <div class="col">
+                <label for="fecha_ingreso">Fecha Ingreso</label>
+                <input type="date" id="fecha_ingreso" name="fecha_ingreso" class="form-control" required />
+              </div>
+            </div>
+            <br />
+
+            <!-- PERITOS -->
+            <div class="row">
+              <div class="col col-md-4">
+                <label for="perito">Perito</label>
+                <select id="perito" name="perito" class="form-control" required>
+                  <option value="">--Seleccionar--</option>
+                  <option value="Perito A">Perito A</option>
+                  <option value="Perito B">Perito B</option>
+                  <option value="Perito C">Perito C</option>
+                  <option value="Perito D">Perito D</option>
+                  <option value="Perito F">Perito F</option>
+                  <option value="Perito G">Perito G</option>
+                  <option value="Perito H">Perito H</option>
+                  <option value="Perito I">Perito I</option>
+                  <option value="Perito J">Perito J</option>
+                  <option value="Perito K">Perito K</option>
+                  <option value="Perito M">Perito M</option>
+                  <option value="Perito L">Perito L</option>
+                  <option value="Perito N">Perito N</option>
+                </select>
+              </div>
+
+              <!-- CAUSA DE MUERTE -->
+              <div class="col col-md-4">
+                <label for="causa">Causa Muerte</label>
+                <select id="codigos" name="codigo" class="form-control" required>
+                  <option value="">--Seleccionar--</option>
+
+                  <option value="" disabled>ASFIXIAS</option>
+                  <option value="NAS-CC">&nbsp;&nbsp;&nbsp;&nbsp;compresión de cuello</option>
+                  <option value="NAS-VA">&nbsp;&nbsp;&nbsp;&nbsp;lesión u obstrucción de vía aérea</option>
+                  <option value="NAS-TA">&nbsp;&nbsp;&nbsp;&nbsp;compresión toraco abdominal</option>
+                  <option value="NAS-CF">&nbsp;&nbsp;&nbsp;&nbsp;confinamiento o agotamiento del aire atmosférico
+                  </option>
+                  <option value="NAS-BA">&nbsp;&nbsp;&nbsp;&nbsp;broncoaspiración</option>
+
+                  <option value="" disabled>ACCIDENTE DE TRÁNSITO</option>
+                  <option value="NAT-C">&nbsp;&nbsp;&nbsp;&nbsp;conductor</option>
+                  <option value="NAT-A">&nbsp;&nbsp;&nbsp;&nbsp;acompañante</option>
+                  <option value="NAT-P">&nbsp;&nbsp;&nbsp;&nbsp;peatón</option>
+                  <option value="NAT-CoA-MT">&nbsp;&nbsp;&nbsp;&nbsp;c o a-motocicleta</option>
+                  <option value="NAT-CoA-AU">&nbsp;&nbsp;&nbsp;&nbsp;c o a-automotor</option>
+
+                  <option value="" disabled>ARMA BLANCA</option>
+                  <option value="NAB-SU">&nbsp;&nbsp;&nbsp;&nbsp;suicidio</option>
+                  <option value="NAB-HO">&nbsp;&nbsp;&nbsp;&nbsp;homicidio</option>
+                  <option value="NAB-AC">&nbsp;&nbsp;&nbsp;&nbsp;accidental</option>
+                  <option value="NAB-VG">&nbsp;&nbsp;&nbsp;&nbsp;violencia de género-femicidio</option>
+
+                  <option value="" disabled>ARMA DE FUEGO</option>
+                  <option value="NAF-SU">&nbsp;&nbsp;&nbsp;&nbsp;suicidio</option>
+                  <option value="NAF-HO">&nbsp;&nbsp;&nbsp;&nbsp;homicidio</option>
+                  <option value="NAF-AC">&nbsp;&nbsp;&nbsp;&nbsp;accidental</option>
+                  <option value="NAF-VG">&nbsp;&nbsp;&nbsp;&nbsp;violencia de género-femicidio</option>
+
+                  <option value="" disabled>CAUSA INDETERMINADA</option>
+                  <option value="NCI">&nbsp;&nbsp;&nbsp;&nbsp;causa indeterminada</option>
+
+                  <option value="" disabled>ELECTROCUCIÓN</option>
+                  <option value="NEL">&nbsp;&nbsp;&nbsp;&nbsp;electrocucion</option>
+
+                  <option value="" disabled>ENFERMEDAD NATURAL</option>
+                  <option value="NEN-CV">&nbsp;&nbsp;&nbsp;&nbsp;cardiovascular</option>
+                  <option value="NEN-RE">&nbsp;&nbsp;&nbsp;&nbsp;respiratorio</option>
+                  <option value="NEN-NE">&nbsp;&nbsp;&nbsp;&nbsp;neurológico</option>
+                  <option value="NEN-ON">&nbsp;&nbsp;&nbsp;&nbsp;oncológico</option>
+                  <option value="NEN-IN">&nbsp;&nbsp;&nbsp;&nbsp;indeterminado</option>
+
+                  <option value="" disabled>FETOS-RN</option>
+                  <option value="NFE-PT">&nbsp;&nbsp;&nbsp;&nbsp;pretermino</option>
+                  <option value="NFE-TE">&nbsp;&nbsp;&nbsp;&nbsp;termino</option>
+                  <option value="MRN">&nbsp;&nbsp;&nbsp;&nbsp;menor a 1 año de vida</option>
+
+                  <option value="" disabled>MUERTE EN ALTURA</option>
+                  <option value="NMA-TR">&nbsp;&nbsp;&nbsp;&nbsp;traumática</option>
+                  <option value="NMA-HT">&nbsp;&nbsp;&nbsp;&nbsp;hipotermia</option>
+                  <option value="NMA-ED">&nbsp;&nbsp;&nbsp;&nbsp;edema cerebral o pulmonar</option>
+
+                  <option value="" disabled>MUERTE EN CUSTODIA</option>
+                  <option value="NMC">&nbsp;&nbsp;&nbsp;&nbsp;muerte en custodia</option>
+
+                  <option value="" disabled>QUEMADO</option>
+                  <option value="NQU-SU">&nbsp;&nbsp;&nbsp;&nbsp;suicidio</option>
+                  <option value="NQU-HO">&nbsp;&nbsp;&nbsp;&nbsp;homicidio</option>
+                  <option value="NQU-AC">&nbsp;&nbsp;&nbsp;&nbsp;accidental</option>
+                  <option value="NQU-VG">&nbsp;&nbsp;&nbsp;&nbsp;violencia de género-femicidio</option>
+
+                  <option value="" disabled>RESTOS ÓSEOS</option>
+                  <option value="NRO">&nbsp;&nbsp;&nbsp;&nbsp;restos oseos</option>
+
+                  <option value="" disabled>SUMERSIÓN</option>
+                  <option value="NSU-AC">&nbsp;&nbsp;&nbsp;&nbsp;accidental</option>
+                  <option value="NSU-HO">&nbsp;&nbsp;&nbsp;&nbsp;homicidio</option>
+                  <option value="NSU-SU">&nbsp;&nbsp;&nbsp;&nbsp;suicidio</option>
+
+                  <option value="" disabled>TRAUMÁTICA</option>
+                  <option value="NRT-V">&nbsp;&nbsp;&nbsp;&nbsp;violencia</option>
+                  <option value="NRT-A">&nbsp;&nbsp;&nbsp;&nbsp;accidental</option>
+
+                  <option value="" disabled>TÓXICOS/VENENOS</option>
+                  <option value="NVT-CN">&nbsp;&nbsp;&nbsp;&nbsp;cianuros</option>
+                  <option value="NVT-AS">&nbsp;&nbsp;&nbsp;&nbsp;arsénico</option>
+                  <option value="NVT-CO">&nbsp;&nbsp;&nbsp;&nbsp;monóxido</option>
+                  <option value="NVT-OT">&nbsp;&nbsp;&nbsp;&nbsp;otros</option>
+                  <option value="NVT-DA">&nbsp;&nbsp;&nbsp;&nbsp;drogas de abuso</option>
+                  <option value="NVT-C">&nbsp;&nbsp;&nbsp;&nbsp;cáusticos</option>
+
+                  <option value="" disabled>EXAMEN EXTERNO</option>
+                  <option value="NEXT">&nbsp;&nbsp;&nbsp;&nbsp;examen externo</option>
+
+                  <option value="" disabled>OTROS</option>
+                  <option value="NOT">&nbsp;&nbsp;&nbsp;&nbsp;otras causas no especificadas</option>
+                </select>
+              </div>
+
+              <!-- LOCALIDAD-->
+              <div class="col col-md-4">
+                <label for="localidad">Localidad</label>
+                <select name="localidad" id="localidad" class="form-control">
+                  <option value="">--Seleccionar--</option>
+                  <option value="Capital">Capital</option>
+                  <option value="Las Heras">Las Heras</option>
+                  <option value="Guaymallen">Guaymallen</option>
+                  <option value="Godoy Cruz">Godoy Cruz</option>
+                  <option value="Maipu">Maipu</option>
+                  <option value="Lujan de Cuyo">Lujan de Cuyo</option>
+                  <option value="Lavalle">Lavalle</option>
+                  <option value="Otro">Otro</option>
+                </select>
+              </div>
+            </div>
+            <br />
+
+            <!-- OBSERVACIONES  -->
+            <!--<div class="row">
+              <div class="col">
+                <label for="observaciones">Observaciones</label>
+                <textarea class="form-control" rows="3" name="observaciones"
+                  placeholder="Escribe tus observaciones aquí" id="observaciones"></textarea>
+              </div>
+            </div>-->
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                Cerrar
+              </button>
+              <button type="submit" id="btnGuardar" class="btn btn-primary">
+                Guardar Necro
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  </div>
+  
+  <script type="module" src="/assets/js/necropsias/main.js"></script>
+
+  <%- include('partials/scripts') %>
+    </script>
+</body>
+
+</html>
