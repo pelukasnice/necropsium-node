@@ -152,9 +152,9 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <form id="cadaver-form" method="POST" action="/collection/save-necropsia">
-            <input type="hidden" name="collectionName" value="<%= collectionName %>">
-
+          <form id="cadaver-form" method="POST" action="/necropsias/save-necropsia">
+            <input type="hidden" name="collectionName" id="collection-name" value="<%= collectionName %>">
+            
             <!-- AÑO, LEGAJO, EXPEDIENTE, OF -->
             <div class="row">
               <div class="col col-md-3">
@@ -386,9 +386,10 @@
 
   </div>
   
-  <script type="module" src="/assets/js/necropsias/main.js"></script>
+  
 
   <%- include('partials/scripts') %>
+  <script type="module" src="/assets/js/necropsias/main.js"></script>
     </script>
 </body>
 

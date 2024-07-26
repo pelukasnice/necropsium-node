@@ -30,19 +30,34 @@ const getAllNecros = async (req, res) => {
     }
 };
 
-
-
-const guardarNecro = async (req, res) => {
+/*const guardarNecro = async (req, res) => {
     try {
-        /*const { error } = validateNecropsiaInput(req.body);
-        if (error) {
-            return res.status(400).json({ success: false, message: error.details[0].message });
-        }*/
+      const { collectionName } = req.body;
+      if (!collectionName) {
+        return res.status(400).json({ success: false, message: 'Collection name is required' });
+      }
+  
+      const schema = mongoose.Schema({}, { strict: false }); // create a dynamic schema
+      const NecropsiaModel = mongoose.model(collectionName, schema);
+  
+      const necropsia = new NecropsiaModel(req.body);
+      const result = await necropsia.save();
+  
+      res.json({ success: true, message: 'Necropsia guardada con éxito', insertedId: result._id });
+    } catch (error) {
+      console.error('Error al guardar la necropsia:', error);
+      res.status(500).json({ success: false, message: 'Error al guardar la necropsia: ' + error.message });
+    }
+  };*/
+
+/*const guardarNecro = async (req, res) => {
+    try {
+        
         const collectionName = req.body.collectionName;
         const collection = mongoose.connection.db.collection(collectionName);
 
         const necropsia = new Necropsia(req.body);
-        /*await necropsia.save();*/
+        
 
         const result = await collection.insertOne(necropsia.toObject());
         res.json({ success: true, message: 'Necropsia guardada con éxito', insertedId: result.insertedId });
@@ -50,10 +65,11 @@ const guardarNecro = async (req, res) => {
         console.error('Error al guardar la necropsia:', error);
         res.status(500).json({ success: false, message: 'Error al guardar la necropsia: ' + error.message });
     }
-};
+};*/
 
 
-/*const guardarNecro = async (req, res) => {
+
+const guardarNecro = async (req, res) => {
     try {
         const {
             collectionName,
@@ -104,7 +120,7 @@ const guardarNecro = async (req, res) => {
             message: 'Error al guardar la necropsia: ' + error.message
         });
     }
-};*/
+};
 
 
 

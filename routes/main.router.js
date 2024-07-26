@@ -33,7 +33,7 @@ router.post('/create-collection', async (req, res) => {
         res.status(500).json({ error: 'Error al crear la colección', details: error.message });
     }
 });
-router.post('/:collectionName/save-necropsia',[    
+/*router.post('/collection/save-necropsia',/*[    
     check('legajo', 'El nombre es obligatorio').not().isEmpty(),
     check('expediente', 'El nombre es obligatorio').not().isEmpty(),
     check('edad', 'El nombre es obligatorio').not().isEmpty(),
@@ -46,14 +46,7 @@ router.post('/:collectionName/save-necropsia',[
     check('perito', 'El nombre es obligatorio').not().isEmpty(),
     check('fecha_ingreso', 'El nombre es obligatorio').not().isEmpty(),
     validarCampos
-], (req, res) => {
-    const errores = validationResult(req);
-    if (!errores.isEmpty()) {
-      return res.status(422).json({ errores: errores.array() });
-    }
-    // Si no hay errores, guardar la necropsia
-    guardarNecro(req, res);
-  });
+], guardarNecro);
 //router.get('/collection/:collectionName', getAllNecros);
 
 /*router.post('/:collection/save-necropsia', guardarNecro)*/
