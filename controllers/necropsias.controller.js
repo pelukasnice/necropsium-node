@@ -30,46 +30,56 @@ const getAllNecros = async (req, res) => {
     }
 };
 
-/*const guardarNecro = async (req, res) => {
-    try {
-      const { collectionName } = req.body;
-      if (!collectionName) {
-        return res.status(400).json({ success: false, message: 'Collection name is required' });
-      }
-  
-      const schema = mongoose.Schema({}, { strict: false }); // create a dynamic schema
-      const NecropsiaModel = mongoose.model(collectionName, schema);
-  
-      const necropsia = new NecropsiaModel(req.body);
-      const result = await necropsia.save();
-  
-      res.json({ success: true, message: 'Necropsia guardada con éxito', insertedId: result._id });
-    } catch (error) {
-      console.error('Error al guardar la necropsia:', error);
-      res.status(500).json({ success: false, message: 'Error al guardar la necropsia: ' + error.message });
-    }
-  };*/
-
-/*const guardarNecro = async (req, res) => {
-    try {
-        
-        const collectionName = req.body.collectionName;
-        const collection = mongoose.connection.db.collection(collectionName);
-
-        const necropsia = new Necropsia(req.body);
-        
-
-        const result = await collection.insertOne(necropsia.toObject());
-        res.json({ success: true, message: 'Necropsia guardada con éxito', insertedId: result.insertedId });
-    } catch (error) {
-        console.error('Error al guardar la necropsia:', error);
-        res.status(500).json({ success: false, message: 'Error al guardar la necropsia: ' + error.message });
-    }
-};*/
-
-
 
 const guardarNecro = async (req, res) => {
+    try {
+        const {
+            collectionName,
+            ...necropsiaData
+        } = req.body;
+
+        const collection = mongoose.connection.db.collection(collectionName);
+
+        const necropsia = await createNecropsia(necropsiaData);
+
+        const result = await collection.insertOne(necropsia);
+
+        res.json({
+            success: true,
+            message: 'Necropsia guardada con éxito',
+            insertedId: result.insertedId
+        });
+    } catch (error) {
+        console.error('Error al guardar la necropsia:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Error al guardar la necropsia: ' + error.message
+        });
+    }
+};
+
+const createNecropsia = (data) => {
+    return {
+        legajo: data.legajo,
+        expediente: data.expediente,
+        oficina_fiscal: data.oficina_fiscal,
+        nombre: data.nombre,
+        apellido: data.apellido.toUpperCase(),
+        edad: parseInt(data.edad),
+        sexo: data.sexo,
+        localidad: data.localidad,
+        codigo: data.codigo,
+        perito: data.perito,
+        fecha_ingreso: new Date(data.fecha_ingreso),
+        visado: data.visado === 'true',
+        anio_necropsia: parseInt(data.anio_necropsia),
+        fecha_creacion: new Date(),
+        fecha_actualizacion: new Date()
+    };
+};
+
+
+/*const guardarNecro = async (req, res) => {
     try {
         const {
             collectionName,
@@ -108,8 +118,8 @@ const guardarNecro = async (req, res) => {
             fecha_actualizacion: new Date()
         });
 
-        res.json({ 
-            success: true, 
+        res.json({
+            success: true,
             message: 'Necropsia guardada con éxito',
             insertedId: result.insertedId
         });
@@ -120,12 +130,41 @@ const guardarNecro = async (req, res) => {
             message: 'Error al guardar la necropsia: ' + error.message
         });
     }
+};*/
+
+const deleteNecro = async (req, res) => {
+    try {
+        const { id, collectionName } = req.body;
+
+        const collection = mongoose.connection.db.collection(collectionName);
+
+        const result = await collection.deleteOne({ _id: new mongoose.Types.ObjectId(id) });
+
+        if (result.deletedCount === 1) {
+            res.json({
+                success: true,
+                message: 'Necropsia eliminada con éxito'
+            });
+        } else {
+            res.status(404).json({
+                success: false,
+                message: 'Necropsia no encontrada'
+            });
+        }
+    } catch (error) {
+        console.error('Error al eliminar la necropsia:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Error al eliminar la necropsia: ', error
+        });
+    }
 };
 
 
 
 module.exports = {
     getAllNecros,
-    guardarNecro
+    guardarNecro,
+    deleteNecro
 }
 

@@ -18,21 +18,14 @@ export function initDataTable() {
                 width: '20%',
                 orderable: false,
                 searchable: false,
-                className: 'text-center',
-                render: function (data, type, row) {
-                    return `
-                <button class="btn btn-view" title="Ver"><i class="fas fa-eye"></i></button>
-                <button class="btn btn-edit" title="Editar"><i class="fas fa-pencil-alt"></i></button>
-                
-              `;
-                }
+                className: 'text-center',             
             }
         ],
         language: {
             url: '/assets/js/plugin/datatables/Spanish.json'
         },
         responsive: true,
-        order: [[7, 'desc']], // Ordenar por la columna 'fecha_ingreso' en orden descendente
+        order: [[0, 'desc']], // Ordenar por la columna 'fecha_ingreso' en orden descendente
         pageLength: 10,
         dom: 'Bfrtip'
 

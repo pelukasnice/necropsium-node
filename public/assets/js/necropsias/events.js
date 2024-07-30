@@ -1,4 +1,4 @@
-import { processForm, sendRequest, addRowToTable, closeModal } from './necropsia.js';
+import { processForm, sendRequest, addRowToTable, closeModal, deleteNecropsia } from './necropsia.js';
 
 export const events = {
     formSubmit: async (event) => {
@@ -7,6 +7,7 @@ export const events = {
             const formObject = processForm(event);
             const response = await sendRequest(formObject);
             if (response.success) {
+                formObject._id = response.insertedId; // Agregamos el _id al formObject
                 addRowToTable(formObject);
                 closeModal();
             } else {
@@ -17,5 +18,25 @@ export const events = {
         }
     },
 
-    // Otros event listeners pueden ser añadidos aquí
+    deleteButton: async (event) => {
+        if (event.target.classList.contains('btn-delete') || event.target.parentNode.classList.contains('btn-delete')) {
+            const button = event.target.classList.contains('btn-delete') ? event.target : event.target.parentNode;
+            const id = button.getAttribute('data-id');
+            const cardTitle = button.closest('.card').querySelector('.card-title');
+            const collectionName = cardTitle.textContent.trim();
+            console.log(id, collectionName);
+            try {
+                await deleteNecropsia(id, collectionName);
+            } catch (error) {
+                console.error('Error al eliminar la necropsia:', error);
+                iziToast.error({
+                    title: 'Error',
+                    message: 'Error al eliminar la necropsia',
+                    position: 'topRight',
+                    transitionIn: 'fadeInLeft',
+                    transitionOut: 'fadeOutRight'
+                });
+            }
+        }
+    }
 };

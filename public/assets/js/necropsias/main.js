@@ -7,6 +7,9 @@ function initApp() {
 
     // Agrega el listener para el formulario de submit
     document.getElementById('cadaver-form').addEventListener('submit', events.formSubmit);
+    
+
+    document.addEventListener('click', events.deleteButton);
 }
 
 // Auto-ejecución de initApp()

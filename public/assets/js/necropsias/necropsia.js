@@ -1,24 +1,6 @@
 
 const iziToast = window.iziToast;
-/*export const processForm = (event) => {
-    event.preventDefault();
-    const formData = new FormData(event.target);
-    const formObject = {      
-        anio_necropsia: formData.get('anio_necropsia'),
-        legajo: formData.get('legajo'),
-        expediente: formData.get('expediente'),
-        oficina_fiscal: formData.get('oficina_fiscal'),
-        apellido: formData.get('apellido'),
-        nombre: formData.get('nombre'),
-        edad: formData.get('edad'),
-        sexo: formData.get('sexo'),
-        fecha_ingreso: formData.get('fecha_ingreso'),
-        perito: formData.get('perito'),
-        causa: formData.get('codigo'),
-        localidad: formData.get('localidad'),      
-    };
-    return formObject;
-  };*/
+
 
 export const processForm = (event) => {
     event.preventDefault();
@@ -27,28 +9,6 @@ export const processForm = (event) => {
     console.log('formObject creado:', JSON.stringify(formObject, null, 2));
     return formObject;
 };
-/*export const processForm = (event) => {
-    event.preventDefault();
-    const formData = new FormData(event.target);
-    const formObject = Object.fromEntries(Array.from(formData).map(([key, value]) => [key, value.trim()]));
-    console.log('formObject creado:', formObject);
-    return formObject;
-};*/
-/*const apiEndpoint = '/necropsias/save-necropsia';
-  const jsonBody = JSON.stringify(formObject);
-  const requestOptions = {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: jsonBody,
-  };
-/*export const sendRequest = async (formObject) => {
-    const apiEndpoint = '/necropsias/save-necropsia';
-    const contentType = 'application/json';
-    const requestOptions = {
-        method: 'POST',
-        headers: { 'Content-Type': contentType },
-        body: JSON.stringify(formObject),
-    };*/
 
 export const sendRequest = async (formObject) => {
     console.log('formObject antes de enviar:', formObject);
@@ -98,11 +58,51 @@ export const addRowToTable = (formObject) => {
         visado: formObject.visado === 'true' ? '<span class="badge badge-success">VISADO</span>' : '<span class="badge badge-warning">NO</span>',
         observaciones: formObject.observaciones || '',
         acciones: `
-        <button class="btn btn-view" title="Ver"><i class="fas fa-eye"></i></button>
-        <button class="btn btn-edit" title="Editar"><i class="fas fa-pencil-alt"></i></button>
+        <button class="btn btn-view" title="Ver"  data-id="${formObject._id}"><i class="fas fa-eye"></i></button>
+        <button class="btn btn-edit" title="Editar" data-id="${formObject._id}"><i class="fas fa-pencil-alt"></i></button>
+        <button class="btn btn-delete" title="Eliminar" data-id="${formObject._id}"><i class="fas fa-trash-alt"></i></button>
       `,
     }).draw(false);
 
+};
+
+export const deleteNecropsia = async (id, collectionName) => {
+    const apiEndpoint = '/necropsias/deleteNecro/${id}/${collectionName}';
+    const requestOptions = {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: id, collectionName: collectionName })
+    };
+
+    try {
+        const response = await fetch(apiEndpoint, requestOptions);
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        const responseData = await response.json();
+
+        if (responseData.success) {
+            iziToast.success({
+                title: 'Éxito',
+                message: 'Necropsia eliminada con éxito',
+                position: 'topRight',
+                transitionIn: 'fadeInLeft',
+                transitionOut: 'fadeOutRight'
+            });
+
+            // Eliminar la fila de DataTable
+            $('#basic-datatables').DataTable().row($(`button[data-id="${id}"]`).closest('tr')).remove().draw();
+        } else {
+            throw new Error(responseData.message || 'Error desconocido al eliminar necropsia');
+        }
+    } catch (error) {
+        console.error('Error al eliminar la necropsia:', error);
+        iziToast.error({
+            title: 'Error',
+            message: 'Error al eliminar la necropsia',
+            position: 'topRight',
+            transitionIn: 'fadeInLeft',
+            transitionOut: 'fadeOutRight'
+        });
+    }
 };
 
 
