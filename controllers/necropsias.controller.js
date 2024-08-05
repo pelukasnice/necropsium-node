@@ -2,7 +2,7 @@ mongoose = require("mongoose");
 const { Necropsia } = require("../models/Necropsia.model");
 
 
-const getAllNecros = async (req, res) => {
+const getRenderNecro = async (req, res) => {
     try {
         const collectionName = req.params.collectionName;
         // Aquí podrías extraer el año de collectionName, por ejemplo:
@@ -30,6 +30,55 @@ const getAllNecros = async (req, res) => {
     }
 };
 
+const getDatatable = async (req, res) => {
+    try {
+        const collectionName = req.params.collectionName;
+        
+
+        // Obtener el modelo de la colección específica
+        const CollectionModel = mongoose.model(collectionName, Necropsia.schema);
+
+        // Consultar todas las necropsias de la colección
+        const necropsias = await CollectionModel.find().exec();
+
+        // Devolver los datos en formato JSON
+        res.json(necropsias);
+        
+    } catch (error) {
+        console.error('Error al obtener necropsias:', error);
+        res.status(500).json({ error: 'Error interno del servidor', message: error.message });
+    }
+};
+
+const getNecroById = async (req, res) => {
+    try {
+        const { collectionName, id } = req.params;
+
+        const collection = mongoose.connection.db.collection(collectionName);
+
+        const necropsia = await collection.findOne({ _id: new mongoose.Types.ObjectId(id) });
+
+        if (!necropsia) {
+            res.status(404).json({
+                success: false,
+                message: 'Necropsia no encontrada'
+            });
+            return;
+        }
+
+        res.json({
+            success: true,
+            message: 'Necropsia encontrada',
+            data: necropsia
+        });
+    } catch (error) {
+        console.error('Error al obtener la necropsia:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Error al obtener la necropsia: ' + error.message
+        });
+    }
+};
 
 const guardarNecro = async (req, res) => {
     try {
@@ -79,58 +128,7 @@ const createNecropsia = (data) => {
 };
 
 
-/*const guardarNecro = async (req, res) => {
-    try {
-        const {
-            collectionName,
-            legajo,
-            expediente,
-            oficina_fiscal,
-            nombre,
-            apellido,
-            edad,
-            sexo,
-            localidad,
-            codigo,
-            perito,
-            fecha_ingreso,
-            visado,
-            anio_necropsia
-        } = req.body;
 
-        const collection = mongoose.connection.db.collection(collectionName);
-
-        const result = await collection.insertOne({
-            legajo,
-            expediente,
-            oficina_fiscal,
-            nombre,
-            apellido,
-            edad: parseInt(edad),
-            sexo,
-            localidad,
-            codigo,
-            perito,
-            fecha_ingreso: new Date(fecha_ingreso),
-            visado: visado === 'true',
-            anio_necropsia: parseInt(anio_necropsia),
-            fecha_creacion: new Date(),
-            fecha_actualizacion: new Date()
-        });
-
-        res.json({
-            success: true,
-            message: 'Necropsia guardada con éxito',
-            insertedId: result.insertedId
-        });
-    } catch (error) {
-        console.error('Error al guardar la necropsia:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Error al guardar la necropsia: ' + error.message
-        });
-    }
-};*/
 
 const deleteNecro = async (req, res) => {
     try {
@@ -163,8 +161,10 @@ const deleteNecro = async (req, res) => {
 
 
 module.exports = {
-    getAllNecros,
+    getRenderNecro,
     guardarNecro,
-    deleteNecro
+    deleteNecro,
+    getNecroById,
+    getDatatable
 }
 
