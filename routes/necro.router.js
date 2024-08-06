@@ -28,7 +28,7 @@ router.post('/save-necropsia', /*[
 
 router.delete('/deleteNecro/:id/:collectionName', deleteNecro)
 
-router.get('/api/:collectionName/:id', getNecroById)
+router.get('/ajax/:collectionName/:id', getNecroById)
 
 module.exports = router;
 

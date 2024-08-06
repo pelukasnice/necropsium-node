@@ -106,6 +106,52 @@ export const deleteNecropsia = async (id, collectionName) => {
 };
 
 
+$(document).on('click', '.btn-edit', function () {
+    const id = $(this).data('id');
+    const cardTitleElement = document.querySelector('h4.card-title');
+    let collectionName = cardTitleElement.textContent.trim();
+    console.log(collectionName);
+
+    // Fetch and fill the form data
+    $.ajax({
+        type: 'GET',
+        url: `/necropsias/ajax/${collectionName}/${id}`,
+        success: function (response) {
+            const formObject = response.data;
+            const fechaIngreso = new Date(formObject.fecha_ingreso);
+            const fechaIngresoString = `${fechaIngreso.getFullYear()}-${String(fechaIngreso.getMonth() + 1).padStart(2, '0')}-${String(fechaIngreso.getDate()).padStart(2, '0')}`;
+
+            // Asegúrate de que el formulario esté completamente cargado
+            $(document).ready(function () {
+                try {
+                    // Llena los campos del formulario
+                    $('#legajo').attr('value', formObject.legajo);
+                    $('#expediente').val(formObject.expediente);
+                    $('#oficina_fiscal').val(formObject.oficina_fiscal);
+                    $('#apellido').val(formObject.apellido);
+                    $('#nombre').val(formObject.nombre);
+                    $('#edad').val(formObject.edad);
+
+                    // Para los radio buttons
+                    $('input[name="sexo"][value="' + formObject.sexo + '"]').prop('checked', true);
+
+                    // Otros campos de ejemplo
+                    $('#fecha_ingreso').val(fechaIngresoString);
+                    $('#perito').val(formObject.perito);
+                    $('#codigos').val(formObject.codigo);
+                    $('#localidad').val(formObject.localidad);
+
+                    // Open the modal
+                    $('#exampleModal').modal('show');
+                } catch (error) {
+                    console.error("Error setting form field values:", error);
+                }
+            });
+        }
+    });
+});
+
+
 
 export const closeModal = () => {
     $('#exampleModal').modal('hide');
