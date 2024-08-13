@@ -135,56 +135,14 @@ export const editRequest = async (formObject, id) => {
 };
 
 
-$(document).on('click', '.btn-edit', function () {
-    const id = $(this).data('id');
-    const cardTitleElement = document.querySelector('h4.card-title');
-    let collectionName = cardTitleElement.textContent.trim();
-    console.log(collectionName);
 
-    // Fetch data
-    $.ajax({
-        type: 'GET',
-        url: `/necropsias/ajax/${collectionName}/${id}`,
-        success: function (response) {
-            const formObject = response.data;
-            const fechaIngreso = new Date(formObject.fecha_ingreso);
-            const fechaIngresoString = `${fechaIngreso.getFullYear()}-${String(fechaIngreso.getMonth() + 1).padStart(2, '0')}-${String(fechaIngreso.getDate()).padStart(2, '0')}`;
-
-            $(document).ready(function () {
-                try {
-                    // Llena los campos del formulario
-                    $('#legajo').attr('value', formObject.legajo);
-                    $('#expediente').val(formObject.expediente);
-                    $('#oficina_fiscal').val(formObject.oficina_fiscal);
-                    $('#apellido').val(formObject.apellido);
-                    $('#nombre').val(formObject.nombre);
-                    $('#edad').val(formObject.edad);
-                    // radio buttons
-                    $('input[name="sexo"][value="' + formObject.sexo + '"]').prop('checked', true);
-                    $('#fecha_ingreso').val(fechaIngresoString);
-                    $('#perito').val(formObject.perito);
-                    $('#codigos').val(formObject.codigo);
-                    $('#localidad').val(formObject.localidad);
-
-                    // Open the modal
-                    $('#exampleModal').data('idEditar', id).modal('show');
-
-                } catch (error) {
-                    console.error("Error setting form field values:", error);
-                }
-            });
-        }
-    });
-
-
-});
 
 
 export const updateRowInTable = (formObject, id) => {
-    const table = $('#basic-datatables').DataTable();   
-    const row = table.row(function(idx, data, node) {
+    const table = $('#basic-datatables').DataTable();
+    const row = table.row(function (idx, data, node) {
         return data._id === id;
-      });
+    });
     console.log(row);
     console.log(`Updating row with ID ${id}`);
 
@@ -210,32 +168,5 @@ export const updateRowInTable = (formObject, id) => {
     table.ajax.reload(null, false);
 }
 
-/*export const updateRowInTable = (formObject) => {
-    const table = $('#basic-datatables').DataTable();
-    const idEditar = $('#exampleModal').data('idEditar');
-    const row = table.row(idEditar);
-    console.log(`Updating row with ID ${idEditar}`);
 
 
-    row.data({
-        "legajo": formObject.legajo,
-        "expediente": formObject.expediente,
-        "oficina_fiscal": formObject.oficina_fiscal,
-        "apellido": formObject.apellido,
-        "nombre": formObject.nombre,
-        "edad": formObject.edad,
-        "sexo": formObject.sexo,
-        "fecha_ingreso": formObject.fecha_ingreso,
-        "perito": formObject.perito,
-        "codigo": formObject.codigo,
-        "localidad": formObject.localidad
-    });
-
-    table.ajax.reload(null, false);
-}*/
-
-
-
-export const closeModal = () => {
-    $('#exampleModal').modal('hide');
-};
