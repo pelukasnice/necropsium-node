@@ -105,6 +105,35 @@ export const deleteNecropsia = async (id, collectionName) => {
     }
 };
 
+export const editRequest = async (formObject, id) => {
+    console.log('formObject antes de enviar:', formObject);
+    const apiEndpoint = `/necropsias/updateNecro/${formObject.collectionName}/${id}`;
+    const jsonBody = JSON.stringify(formObject);
+    const requestOptions = {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: jsonBody
+    };
+
+    try {
+        const response = await fetch(apiEndpoint, requestOptions);
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+
+        iziToast.success({
+            title: 'Éxito',
+            message: 'La solicitud ha sido actualizada con éxito',
+            position: 'topRight',
+            transitionIn: 'fadeInLeft',
+            transitionOut: 'fadeOutRight'
+        });
+
+        return await response.json();
+    } catch (error) {
+        console.error('Error al enviar la solicitud:', error);
+        throw error;
+    }
+};
+
 
 $(document).on('click', '.btn-edit', function () {
     const id = $(this).data('id');
@@ -112,7 +141,7 @@ $(document).on('click', '.btn-edit', function () {
     let collectionName = cardTitleElement.textContent.trim();
     console.log(collectionName);
 
-    // Fetch and fill the form data
+    // Fetch data
     $.ajax({
         type: 'GET',
         url: `/necropsias/ajax/${collectionName}/${id}`,
@@ -121,7 +150,6 @@ $(document).on('click', '.btn-edit', function () {
             const fechaIngreso = new Date(formObject.fecha_ingreso);
             const fechaIngresoString = `${fechaIngreso.getFullYear()}-${String(fechaIngreso.getMonth() + 1).padStart(2, '0')}-${String(fechaIngreso.getDate()).padStart(2, '0')}`;
 
-            // Asegúrate de que el formulario esté completamente cargado
             $(document).ready(function () {
                 try {
                     // Llena los campos del formulario
@@ -131,25 +159,80 @@ $(document).on('click', '.btn-edit', function () {
                     $('#apellido').val(formObject.apellido);
                     $('#nombre').val(formObject.nombre);
                     $('#edad').val(formObject.edad);
-
-                    // Para los radio buttons
+                    // radio buttons
                     $('input[name="sexo"][value="' + formObject.sexo + '"]').prop('checked', true);
-
-                    // Otros campos de ejemplo
                     $('#fecha_ingreso').val(fechaIngresoString);
                     $('#perito').val(formObject.perito);
                     $('#codigos').val(formObject.codigo);
                     $('#localidad').val(formObject.localidad);
 
                     // Open the modal
-                    $('#exampleModal').modal('show');
+                    $('#exampleModal').data('idEditar', id).modal('show');
+
                 } catch (error) {
                     console.error("Error setting form field values:", error);
                 }
             });
         }
     });
+
+
 });
+
+
+export const updateRowInTable = (formObject, id) => {
+    const table = $('#basic-datatables').DataTable();   
+    const row = table.row(function(idx, data, node) {
+        return data._id === id;
+      });
+    console.log(row);
+    console.log(`Updating row with ID ${id}`);
+
+    if (row.length === 0) {
+        console.error(`No se encontró la fila con ID ${id}`);
+        return;
+    }
+
+    row.data({
+        "legajo": formObject.legajo,
+        "expediente": formObject.expediente,
+        "oficina_fiscal": formObject.oficina_fiscal,
+        "apellido": formObject.apellido,
+        "nombre": formObject.nombre,
+        "edad": formObject.edad,
+        "sexo": formObject.sexo,
+        "fecha_ingreso": formObject.fecha_ingreso,
+        "perito": formObject.perito,
+        "codigo": formObject.codigo,
+        "localidad": formObject.localidad
+    });
+
+    table.ajax.reload(null, false);
+}
+
+/*export const updateRowInTable = (formObject) => {
+    const table = $('#basic-datatables').DataTable();
+    const idEditar = $('#exampleModal').data('idEditar');
+    const row = table.row(idEditar);
+    console.log(`Updating row with ID ${idEditar}`);
+
+
+    row.data({
+        "legajo": formObject.legajo,
+        "expediente": formObject.expediente,
+        "oficina_fiscal": formObject.oficina_fiscal,
+        "apellido": formObject.apellido,
+        "nombre": formObject.nombre,
+        "edad": formObject.edad,
+        "sexo": formObject.sexo,
+        "fecha_ingreso": formObject.fecha_ingreso,
+        "perito": formObject.perito,
+        "codigo": formObject.codigo,
+        "localidad": formObject.localidad
+    });
+
+    table.ajax.reload(null, false);
+}*/
 
 
 

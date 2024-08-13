@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const { getRenderNecro, guardarNecro, deleteNecro,getNecroById, getDatatable } = require('../controllers/necropsias.controller');
+const { getRenderNecro, guardarNecro, deleteNecro,getNecroById, getDatatable, actualizarNecro } = require('../controllers/necropsias.controller');
 const validateNecropsiaInput = require('../helpers/necro-validate');
 const { validarCampos } = require('../middlewares/validar-campos');
 const { check, validationResult } = require('express-validator');
@@ -9,7 +9,9 @@ const router = Router();
 
 router.get('/:collectionName', getRenderNecro);
 
-router.get('/ajax/:collectionName',getDatatable)
+router.get('/ajax/:collectionName',getDatatable);
+
+router.get('/ajax/:collectionName/:id', getNecroById)
 
 router.post('/save-necropsia', /*[
     check('legajo', 'El nombre es obligatorio').not().isEmpty(),
@@ -28,7 +30,8 @@ router.post('/save-necropsia', /*[
 
 router.delete('/deleteNecro/:id/:collectionName', deleteNecro)
 
-router.get('/ajax/:collectionName/:id', getNecroById)
+router.put('/updateNecro/:collectionName/:id', actualizarNecro);
+
 
 module.exports = router;
 

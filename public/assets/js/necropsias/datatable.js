@@ -43,7 +43,7 @@ export function initDataTable(collectionName) {
                   return data === 'true'? '<span class="badge badge-success">VISADO</span>' : '<span class="badge badge-warning">NO</span>';
                 }
               },
-            { data: 'visado', name: 'visado', width: '10%' },
+            /*{ data: 'visado', name: 'visado', width: '10%' },*/            
             {
                 data: null,
                 name: 'acciones',

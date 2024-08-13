@@ -33,7 +33,7 @@ const getRenderNecro = async (req, res) => {
 const getDatatable = async (req, res) => {
     try {
         const collectionName = req.params.collectionName;
-        
+
 
         // Obtener el modelo de la colección específica
         const CollectionModel = mongoose.model(collectionName, Necropsia.schema);
@@ -43,7 +43,7 @@ const getDatatable = async (req, res) => {
 
         // Devolver los datos en formato JSON
         res.json(necropsias);
-        
+
     } catch (error) {
         console.error('Error al obtener necropsias:', error);
         res.status(500).json({ error: 'Error interno del servidor', message: error.message });
@@ -127,6 +127,38 @@ const createNecropsia = (data) => {
     };
 };
 
+const actualizarNecro = async (req, res) => {
+    try {
+        const collectionName = req.params.collectionName;
+        const id = req.params.id;
+        const { ...necropsiaData } = req.body;
+
+
+        const collection = mongoose.connection.db.collection(collectionName);
+
+        const necropsiaActualizada = await createNecropsia(necropsiaData);
+
+        const result = await collection.updateOne({ _id: new mongoose.Types.ObjectId(id) }, { $set: necropsiaActualizada });
+
+        if (result.modifiedCount === 0) {
+            res.status(404).json({
+                success: false,
+                message: 'Necropsia no encontrada'
+            });
+        } else {
+            res.json({
+                success: true,
+                message: 'Necropsia actualizada con éxito'
+            });
+        }
+    } catch (error) {
+        console.error('Error al actualizar la necropsia:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Error al actualizar la necropsia: ' + error.message
+        });
+    }
+};
 
 
 
@@ -165,6 +197,7 @@ module.exports = {
     guardarNecro,
     deleteNecro,
     getNecroById,
-    getDatatable
+    getDatatable,
+    actualizarNecro
 }
 
