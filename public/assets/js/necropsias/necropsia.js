@@ -44,27 +44,7 @@ export const sendRequest = async (formObject) => {
     }
 };
 
-export const addRowToTable = (formObject) => {
-    const table = $('#basic-datatables').DataTable();
-    const newRow = table.row.add({
-        legajo: formObject.legajo,
-        oficina_fiscal: formObject.oficina_fiscal,
-        expediente: formObject.expediente,
-        nombre_apellido: `${formObject.nombre} ${formObject.apellido}`,
-        edad: formObject.edad,
-        perito: formObject.perito,
-        codigo: formObject.codigo,
-        fecha_ingreso: formObject.fecha_ingreso,
-        visado: formObject.visado === 'true' ? '<span class="badge badge-success">VISADO</span>' : '<span class="badge badge-warning">NO</span>',
-        observaciones: formObject.observaciones || '',
-        acciones: `
-        <button class="btn btn-view" title="Ver"  data-id="${formObject._id}"><i class="fas fa-eye"></i></button>
-        <button class="btn btn-edit" title="Editar" data-id="${formObject._id}"><i class="fas fa-pencil-alt"></i></button>
-        <button class="btn btn-delete" title="Eliminar" data-id="${formObject._id}"><i class="fas fa-trash-alt"></i></button>
-      `,
-    }).draw(false);
 
-};
 
 export const deleteNecropsia = async (id, collectionName) => {
     const apiEndpoint = '/necropsias/deleteNecro/${id}/${collectionName}';
@@ -134,39 +114,6 @@ export const editRequest = async (formObject, id) => {
     }
 };
 
-
-
-
-
-export const updateRowInTable = (formObject, id) => {
-    const table = $('#basic-datatables').DataTable();
-    const row = table.row(function (idx, data, node) {
-        return data._id === id;
-    });
-    console.log(row);
-    console.log(`Updating row with ID ${id}`);
-
-    if (row.length === 0) {
-        console.error(`No se encontró la fila con ID ${id}`);
-        return;
-    }
-
-    row.data({
-        "legajo": formObject.legajo,
-        "expediente": formObject.expediente,
-        "oficina_fiscal": formObject.oficina_fiscal,
-        "apellido": formObject.apellido,
-        "nombre": formObject.nombre,
-        "edad": formObject.edad,
-        "sexo": formObject.sexo,
-        "fecha_ingreso": formObject.fecha_ingreso,
-        "perito": formObject.perito,
-        "codigo": formObject.codigo,
-        "localidad": formObject.localidad
-    });
-
-    table.ajax.reload(null, false);
-}
 
 
 

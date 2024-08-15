@@ -1,5 +1,7 @@
 import { initDataTable } from './datatable.js';
 import { events } from './events.js';
+import { editNecropsia } from './necro-table.js';
+
 
 function initApp() {
     const cardTitleElement = document.querySelector('h4.card-title');
@@ -12,6 +14,11 @@ function initApp() {
     
 
     document.addEventListener('click', events.deleteButton);
+
+    $(document).on('click', '.btn-edit', function () {
+        const id = $(this).data('id');
+        editNecropsia(id);
+    });
 }
 
 // Auto-ejecución de initApp()

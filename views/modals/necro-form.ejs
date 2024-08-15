@@ -66,39 +66,9 @@
       </div>
       <br />
 
-      <!-- FECHA Y HORA DE INGRESO -->
+      <!-- CODIGO NECROPSIA -->
       <div class="row">
         <div class="col">
-          <label for="fecha_ingreso">Fecha Ingreso</label>
-          <input type="date" id="fecha_ingreso" name="fecha_ingreso" class="form-control" required />
-        </div>
-      </div>
-      <br />
-
-      <!-- PERITOS -->
-      <div class="row">
-        <div class="col col-md-4">
-          <label for="perito">Perito</label>
-          <select id="perito" name="perito" class="form-control" required>
-            <option value="">--Seleccionar--</option>
-            <option value="Perito A">Perito A</option>
-            <option value="Perito B">Perito B</option>
-            <option value="Perito C">Perito C</option>
-            <option value="Perito D">Perito D</option>
-            <option value="Perito F">Perito F</option>
-            <option value="Perito G">Perito G</option>
-            <option value="Perito H">Perito H</option>
-            <option value="Perito I">Perito I</option>
-            <option value="Perito J">Perito J</option>
-            <option value="Perito K">Perito K</option>
-            <option value="Perito M">Perito M</option>
-            <option value="Perito L">Perito L</option>
-            <option value="Perito N">Perito N</option>
-          </select>
-        </div>
-
-        <!-- CAUSA DE MUERTE -->
-        <div class="col col-md-4">
           <label for="causa">Causa Muerte</label>
           <select id="codigos" name="codigo" class="form-control" required>
             <option value="">--Seleccionar--</option>
@@ -188,6 +158,37 @@
             <option value="" disabled>OTROS</option>
             <option value="NOT">&nbsp;&nbsp;&nbsp;&nbsp;otras causas no especificadas</option>
           </select>
+          
+        </div>
+      </div>
+      <br />
+
+      <!-- PERITOS -->
+      <div class="row">
+        <div class="col col-md-4">
+          <label for="perito">Perito</label>
+          <select id="perito" name="perito" class="form-control" required>
+            <option value="">--Seleccionar--</option>
+            <option value="Perito A">Perito A</option>
+            <option value="Perito B">Perito B</option>
+            <option value="Perito C">Perito C</option>
+            <option value="Perito D">Perito D</option>
+            <option value="Perito F">Perito F</option>
+            <option value="Perito G">Perito G</option>
+            <option value="Perito H">Perito H</option>
+            <option value="Perito I">Perito I</option>
+            <option value="Perito J">Perito J</option>
+            <option value="Perito K">Perito K</option>
+            <option value="Perito M">Perito M</option>
+            <option value="Perito L">Perito L</option>
+            <option value="Perito N">Perito N</option>
+          </select>
+        </div>
+
+        <!-- FECHA INGRESO -->
+        <div class="col col-md-4">
+          <label for="fecha_ingreso">Fecha Ingreso</label>
+          <input type="date" id="fecha_ingreso" name="fecha_ingreso" class="form-control" required />
         </div>
 
         <!-- LOCALIDAD-->
